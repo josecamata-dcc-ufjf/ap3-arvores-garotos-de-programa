@@ -155,29 +155,137 @@ namespace Sort
 
     }
 
-    // TODO: Implementação algoritmo de ordenação QuickSort
-    template<typename T, class Compare >
-    void QuickSort(std::vector<T> &v, Compare cmp)
+    // FIXME: Implementação algoritmo de ordenação QuickSort
+    template <typename T, class Compare>
+    int partition(std::vector<T> &arr, int low, int high, Compare comp, Perf::Performance &performanc)
     {
+        T pivot = arr[high];
+        int i = low - 1;
+        for (int j = low; j <= high - 1; j++)
+        {
+            performanc.get_counter().increment_comparisons();
+            if (comp(arr[j], pivot))
+            {
+                i++;
+                std::swap(arr[i], arr[j]);
+                performanc.get_counter().increment_swaps();
+            }
+        }
+        std::swap(arr[i + 1], arr[high]);
+        performanc.get_counter().increment_swaps();
+        return i + 1;
+    }
 
+    template <typename T, class Compare>
+    void auxQuickSort(std::vector<T> &arr, int low, int high, Compare comp, Perf::Performance &performanc)
+    {
+        if (low < high)
+        {
+            int pivotIndex = partition(arr, low, high, comp, performanc);
+            auxQuickSort(arr, low, pivotIndex - 1, comp, performanc);
+            auxQuickSort(arr, pivotIndex + 1, high, comp, performanc);
+        }
+    }
 
-
+    template <typename T, class Compare>
+    void QuickSort(std::vector<T> &arr, Compare comp)
+    {
+        Perf::Performance performanc;
+        int n = arr.size();
+        auxQuickSort(arr, 0, n - 1, comp, performanc);
+        cout << "QuickSort: Foram feitas " << performanc.get_counter().get_comparisons() << " comparações." << std::endl;
+        cout << "QuickSort: Foram feitas " << performanc.get_counter().get_swaps() << " trocas." << std::endl;
     }
 
     
-    //  TODO: Implemente algoritmo de ordenação HeapSort
-    template<typename T, class Compare >
-    void HeapSort(std::vector<T> &v, Compare cmp)
+    //  FIXME: emente algoritmo de ordenação HeapSort
+    template <typename T, class Compare>
+    void heapify(std::vector<T> &v, int n, int k, Compare cmp, Perf::Performance &performanc)
     {
-      
+        int aux = k;           // raiz
+        int esq = (2 * k) + 1; // esq = 2*i + 1
+        int dir = (2 * k) + 2; // dir = 2*i + 2
+
+        // esq > aux
+        performanc.get_counter().increment_comparisons();
+        if (esq < n && cmp(v[esq], v[aux]))
+            aux = esq;
+
+        // dir > aux
+        performanc.get_counter().increment_comparisons();
+        if (dir < n && cmp(v[dir], v[aux]))
+            aux = dir;
+
+        // se estiver certo
+        if (aux != k)
+        {
+            swap(v[k], v[aux]);
+            performanc.get_counter().increment_swaps();
+            heapify(v, n, aux, cmp, performanc);
+        }
     }
 
-    // TODO: Pesquise por algoritmos de ordenação eficientes não vistos em sala de aula.
+    template <typename T, class Compare>
+    void HeapSort(std::vector<T> &v, Compare cmp)
+    {
+        int n = v.size();
+
+        Perf::Performance performanc;
+
+        // construtor Heap
+        for (int k = (n / 2) - 1; k >= 0; k--)
+            heapify(v, n, k, cmp, performanc);
+
+        // extrai um por um os elementos da heap
+        for (int k = n - 1; k > 0; k--)
+        {
+            swap(v[0], v[k]);
+            performanc.get_counter().increment_comparisons();
+            heapify(v, k, 0, cmp, performanc);
+        }
+
+        cout << "HeapSort: Foram feitas " << performanc.get_counter().get_comparisons() << " comparações." << std::endl;
+        cout << "HeapSort: Foram feitas " << performanc.get_counter().get_swaps() << " trocas." << std::endl;
+    }
+
+    // FIXME: Pesquise por algoritmos de ordenação eficientes não vistos em sala de aula.
     //       Implemente um deles.
-    template<typename T, class Compare >
+    template <typename T, class Compare>
+    void shellSort(std::vector<T> &v, Compare cmp, int n)
+    {
+        int i, j, k;
+        T temp;
+        Perf::Performance performanc;
+
+        for (i = n / 2; i > 0; i = i / 2)
+        {
+            for (j = i; j < n; j++)
+            {
+                for (k = j - i; k >= 0; k = k - i)
+                {
+                    performanc.get_counter().increment_comparisons();
+                    if (cmp(v[k], v[k + 1]))
+                        break;
+
+                    else
+                    {
+                        temp = v[k];
+                        v[k] = v[k + i];
+                        performanc.get_counter().increment_swaps();
+                        v[k + i] = temp;
+                    }
+                }
+            }
+        }
+        cout << "MySort(ShellSort): Foram feitas " << performanc.get_counter().get_comparisons() << " comparações." << std::endl;
+        cout << "MySort(ShellSort): Foram feitas " << performanc.get_counter().get_swaps() << " trocas." << std::endl;
+    }
+
+    template <typename T, class Compare>
     void MySort(std::vector<T> &v, Compare cmp)
     {
-   
+        int n = v.size();
+        shellSort(v, cmp, n);
     }
 
     //Observaçã0:
