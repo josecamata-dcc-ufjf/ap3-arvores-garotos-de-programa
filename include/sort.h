@@ -142,29 +142,16 @@ namespace Sort
 
     }
 
-    template<typename T, class Compare >
-    int Partition(std::vector<T> &v, Compare cmp, Performance &perf)
-    {
-
-        return 0;
-    }
-
-    template<typename T, class Compare >
-    void QuickSort(std::vector<T> &v, int low, int hight, Compare cmp, Performance &perf)
-    {
-
-    }
-
     // FIXME: Implementação algoritmo de ordenação QuickSort
     template <typename T, class Compare>
-    int partition(std::vector<T> &arr, int low, int high, Compare comp, Perf::Performance &performanc)
+    int partition(std::vector<T> &arr, int low, int high, Compare cmp, Perf::Performance &performanc)
     {
         T pivot = arr[high];
         int i = low - 1;
         for (int j = low; j <= high - 1; j++)
         {
             performanc.get_counter().increment_comparisons();
-            if (comp(arr[j], pivot))
+            if (cmp(arr[j], pivot))
             {
                 i++;
                 std::swap(arr[i], arr[j]);
@@ -177,22 +164,22 @@ namespace Sort
     }
 
     template <typename T, class Compare>
-    void auxQuickSort(std::vector<T> &arr, int low, int high, Compare comp, Perf::Performance &performanc)
+    void auxQuickSort(std::vector<T> &arr, int low, int high, Compare cmp, Perf::Performance &performanc)
     {
         if (low < high)
         {
-            int pivotIndex = partition(arr, low, high, comp, performanc);
-            auxQuickSort(arr, low, pivotIndex - 1, comp, performanc);
-            auxQuickSort(arr, pivotIndex + 1, high, comp, performanc);
+            int pivotIndex = partition(arr, low, high, cmp, performanc);
+            auxQuickSort(arr, low, pivotIndex - 1, cmp, performanc);
+            auxQuickSort(arr, pivotIndex + 1, high, cmp, performanc);
         }
     }
 
     template <typename T, class Compare>
-    void QuickSort(std::vector<T> &arr, Compare comp)
+    void QuickSort(std::vector<T> &arr, Compare cmp)
     {
         Perf::Performance performanc;
         int n = arr.size();
-        auxQuickSort(arr, 0, n - 1, comp, performanc);
+        auxQuickSort(arr, 0, n - 1, cmp, performanc);
         cout << "QuickSort: Foram feitas " << performanc.get_counter().get_comparisons() << " comparações." << std::endl;
         cout << "QuickSort: Foram feitas " << performanc.get_counter().get_swaps() << " trocas." << std::endl;
     }
