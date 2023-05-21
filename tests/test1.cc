@@ -1,33 +1,26 @@
-
 #include <iostream>
 #include <fstream>
 #include <string>
 using namespace std;
 
 #include "rb_tree.h"
-#include "rb_node.h"
 
-// Implemente aqui testes para inserção de arvore vermelho-preto
-int main(int argc, char* argv[])
-{
-    
-    BRtree::RedBlackTree<int> tree;
-    
+int main() {
+    RBTree<int> arvore;
 
-    // Inserção dos elementos na árvore
-    tree.insert(10);
-    tree.insert(5);
-    tree.insert(15);
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(12);
-    tree.insert(17);
+    // Inserção de valores na árvore
+    arvore.inserir(10);
+    arvore.inserir(20);
+    arvore.inserir(30);
+    arvore.inserir(40);
+    arvore.inserir(50);
 
-    if(tree.busca(15)){
+    // Teste de busca
+    No<int>* resultado = arvore.buscar(30);
+    if (resultado != nullptr){
+        std::cout << "Valor encontrado: " << resultado->getInfo() << std::endl;
         return 0;
     }
-    else
-        return -1;
+
+    return -1;
 }
-
-

@@ -1,34 +1,39 @@
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cstring>
 using namespace std;
 
-#include "rb_tree.h"
-#include "rb_node.h"
-
 // Implemente aqui testes para remoção de arvore vermelho-preto
-int main(int argc, char* argv[])
+
+#include "rb_tree.h"
+
+int main()
 {
-    BRtree::RedBlackTree<int> tree;
-    
+RBTree<int> arvore;
 
-    // Inserção dos elementos na árvore
-    tree.insert(10);
-    tree.insert(5);
-    tree.insert(15);
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(12);
-    tree.insert(17);
+    arvore.inserir(5);
+    arvore.inserir(3);
+    arvore.inserir(7);
+    arvore.inserir(1);
+    arvore.inserir(4);
 
-    tree.imprime();
-    tree.remove(10);
-    tree.imprime();
-    
-    if(tree.busca(10))
+
+    std::cout << "Excluindo o valor 3..." << std::endl;
+    arvore.remover(3);
+
+    // Verificar se o valor 3 ainda está presente na árvore após a exclusão
+    No<int>* no3 = arvore.buscar(3);
+    if (no3 != nullptr) {
+        std::cout << "Teste falhou. O valor 3 ainda está presente na árvore." << std::endl;
         return -1;
-    else
+    }
+
+     No<int>* resultado = arvore.buscar(3);
+    if (resultado != nullptr){
+        std::cout << "Valor encontrado: " << resultado->getInfo() << std::endl;
+        return -1;
+    }
+
     return 0;
 }
