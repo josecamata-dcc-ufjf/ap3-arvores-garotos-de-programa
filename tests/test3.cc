@@ -26,5 +26,9 @@ int main(int argc, char* argv[])
     tree.imprime();
     tree.remove(10);
     tree.imprime();
+    
+    if(tree.busca(10))
+        return -1;
+    else
     return 0;
 }

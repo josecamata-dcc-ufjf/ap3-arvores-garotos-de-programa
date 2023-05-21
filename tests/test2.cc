@@ -11,20 +11,24 @@ using namespace std;
 // Implemente aqui testes para busca de arvore vermelho-preto
 int main(int argc, char* argv[])
 {
-    BRtree::RedBlackTree<int> tree;
+    BRtree::RedBlackTree<int> arvore;
     
 
-    // Inserção dos elementos na árvore
-    tree.insert(10);
-    tree.insert(5);
-    tree.insert(15);
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(12);
-    tree.insert(17);
-    
-    tree.busca(10);
+    // Inserção de valores na árvore
+    arvore.insert(10);
+    arvore.insert(20);
+    arvore.insert(30);
+    arvore.insert(40);
+    arvore.insert(50);
 
-    
-    
+    // Teste de busca
+    if (arvore.busca(10)){
+        std::cout << "Valor encontrado: "<< std::endl;
+        return 0;
+    }
+
+    return -1;
 }
+
+    
+    
