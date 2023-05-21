@@ -9,19 +9,21 @@ using namespace std;
 
 // Implemente aqui testes para inserção de arvore B
 int main() {
-    BTree tree;
+    ArvoreB<int> arvore;
 
-    // Inserção de chaves
-    tree.insert(10);
-    tree.insert(20);
-    tree.insert(5);
-    tree.insert(6);
-    tree.insert(12);
-    tree.insert(30);
+    arvore.inserir(5);
+    arvore.inserir(3);
+    arvore.inserir(7);
+    arvore.inserir(1);
+    arvore.inserir(4);
 
-    // Percorre a árvore em ordem
-    std::cout << "Árvore B percorrida em ordem:" << std::endl;
-    tree.traverse();
+    std::cout << "Raiz: " << arvore.getRaiz()->getInfo() << std::endl;
 
-    return 0;
+    No<int>* no7 = arvore.buscar(7);
+    if (no7 != nullptr) {
+        std::cout << "Pai do 7: " << no7->getPai()->getInfo() << std::endl;
+        return 0;
+    }
+
+    return -1;
 }

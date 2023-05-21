@@ -10,24 +10,20 @@ using namespace std;
 // Implemente aqui testes para busca de arvore B
 int main()
 {
+    ArvoreB<int> arvore;
 
-    BTree tree;
+    arvore.inserir(5);
+    arvore.inserir(3);
+    arvore.inserir(7);
+    arvore.inserir(1);
+    arvore.inserir(4);
 
-    tree.insert(10);
-    tree.insert(20);
-    tree.insert(5);
-    tree.insert(6);
-    tree.insert(12);
-    tree.insert(30);
+    std::cout << "Raiz: " << arvore.getRaiz()->getInfo() << std::endl;
 
-    int searchKey = 12;
-    Node *searchResult = tree.search(searchKey);
-    if (searchResult != nullptr){
-        std::cout << "Chave " << searchKey << " encontrada!" << std::endl;
-
+    No<int>* no7 = arvore.buscar(7);
+    if (no7 != nullptr) {
+        std::cout << "Pai do 7: " << no7->getPai()->getInfo() << std::endl;
         return 0;
-    }else{
-        std::cout << "Chave " << searchKey << " não encontrada!" << std::endl;
     }
 
     return -1;

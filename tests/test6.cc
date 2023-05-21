@@ -9,41 +9,24 @@ using namespace std;
 
 // Implemente aqui testes para remoção de arvore B
 int main() {
-     BTree tree;
+    ArvoreB<int> arvore;
 
-    // Inserindo chaves na árvore
-    tree.insert(10);
-    tree.insert(20);
-    tree.insert(30);
-    tree.insert(40);
-    tree.insert(50);
-    tree.insert(60);
-    tree.insert(70);
-    tree.insert(80);
-    tree.insert(90);
+    arvore.inserir(5);
+    arvore.inserir(3);
+    arvore.inserir(7);
+    arvore.inserir(1);
+    arvore.inserir(4);
 
-    cout << "Árvore B original: ";
-    tree.traverse();
-    cout << endl;
 
-    // Removendo chaves da árvore
-    cout << "Removendo a chave 30" << endl;
-    tree.remove(30);
-    cout << "Árvore B após remoção: ";
-    tree.traverse();
-    cout << endl;
+    std::cout << "Excluindo o valor 3..." << std::endl;
+    arvore.excluir(3);
 
-    cout << "Removendo a chave 50" << endl;
-    tree.remove(50);
-    cout << "Árvore B após remoção: ";
-    tree.traverse();
-    cout << endl;
-
-    cout << "Removendo a chave 70" << endl;
-    tree.remove(70);
-    cout << "Árvore B após remoção: ";
-    tree.traverse();
-    cout << endl;
+    // Verificar se o valor 3 ainda está presente na árvore após a exclusão
+    No<int>* no3 = arvore.buscar(3);
+    if (no3 != nullptr) {
+        std::cout << "Teste falhou. O valor 3 ainda está presente na árvore." << std::endl;
+        return -1;
+    }
 
     return 0;
 }
