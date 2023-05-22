@@ -4,34 +4,35 @@
 //TODO: Implemenatar a árvore B aqui e classes auxiliares (se necessário)
 
 #include <iostream>
+#include "perf.h"
 
 template <typename T>
 class ArvoreB;
 
 template <typename T>
-class No {
+class NoB {
 private:
     T info;
-    No<T>* esq;
-    No<T>* dir;
-    No<T>* pai;
+    NoB<T>* esq;
+    NoB<T>* dir;
+    NoB<T>* pai;
 
 public:
-    No(T n) : info(n), esq(nullptr), dir(nullptr), pai(nullptr) {}
+    NoB(T n) : info(n), esq(nullptr), dir(nullptr), pai(nullptr) {}
 
     T getInfo() const {
         return info;
     }
 
-    No<T>* getEsq() const {
+    NoB<T>* getEsq() const {
         return esq;
     }
 
-    No<T>* getDir() const {
+    NoB<T>* getDir() const {
         return dir;
     }
 
-    No<T>* getPai() const {
+    NoB<T>* getPai() const {
         return pai;
     }
 
@@ -41,18 +42,29 @@ public:
 template <typename T>
 class ArvoreB {
 private:
-    No<T>* raiz;
+    NoB<T>* raiz;
 
 public:
+
+    Perf::Performance perf;
+
+    unsigned int getComp(){
+        return perf.get_counter().get_comparisons();
+    }
+
+    unsigned int getRota(){
+        return perf.get_counter().get_swaps();
+    }
+
     ArvoreB() : raiz(nullptr) {}
 
-    No<T>* getRaiz() const {
+    NoB<T>* getRaiz() const {
         return raiz;
     }
 
     void inserir(T n) {
         if (raiz == nullptr) {
-            raiz = new No<T>(n);
+            raiz = new NoB<T>(n);
         } else {
             inserirNo(raiz, n);
         }
@@ -62,15 +74,15 @@ public:
         excluirNo(raiz, n);
     }
 
-    No<T>* buscar(T n) {
+    NoB<T>* buscar(T n) {
         return buscarNo(raiz, n);
     }
 
 private:
-    void inserirNo(No<T>* no, T n) {
+    void inserirNo(NoB<T>* no, T n) {
         if (n < no->getInfo()) {
             if (no->getEsq() == nullptr) {
-                No<T>* novoNo = new No<T>(n);
+                NoB<T>* novoNo = new NoB<T>(n);
                 novoNo->pai = no;
                 no->esq = novoNo;
             } else {
@@ -78,7 +90,7 @@ private:
             }
         } else if (n > no->getInfo()) {
             if (no->getDir() == nullptr) {
-                No<T>* novoNo = new No<T>(n);
+                NoB<T>* novoNo = new NoB<T>(n);
                 novoNo->pai = no;
                 no->dir = novoNo;
             } else {
@@ -87,7 +99,7 @@ private:
         }
     }
 
-    void excluirNo(No<T>* no, T n) {
+    void excluirNo(NoB<T>* no, T n) {
         if (no == nullptr) {
             return;
         }
@@ -109,14 +121,14 @@ private:
                 }
                 delete no;
             } else if (no->getEsq() != nullptr && no->getDir() != nullptr) {
-                No<T>* sucessor = no->getDir();
+                NoB<T>* sucessor = no->getDir();
                 while (sucessor->getEsq() != nullptr) {
                     sucessor = sucessor->getEsq();
                 }
                 no->info = sucessor->getInfo();
                 excluirNo(sucessor, sucessor->getInfo());
             } else {
-                No<T>* filho = (no->getEsq() != nullptr) ? no->getEsq() : no->getDir();
+                NoB<T>* filho = (no->getEsq() != nullptr) ? no->getEsq() : no->getDir();
                 if (no->getPai() == nullptr) {
                     raiz = filho;
                 } else {
@@ -132,11 +144,13 @@ private:
         }
     }
 
-    No<T>* buscarNo(No<T>* no, T n) {
+    NoB<T>* buscarNo(NoB<T>* no, T n) {
+        perf.get_counter().increment_comparisons();
         if (no == nullptr || no->getInfo() == n) {
             return no;
         }
 
+        perf.get_counter().increment_comparisons();
         if (n < no->getInfo()) {
             return buscarNo(no->getEsq(), n);
         } else {
