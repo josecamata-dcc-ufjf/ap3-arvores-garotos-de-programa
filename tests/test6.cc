@@ -7,26 +7,27 @@ using namespace std;
 
 #include "b_tree.h"
 
-// Implemente aqui testes para remoção de arvore B
+
 int main() {
-    ArvoreB<int> arvore;
+   int t = 3;  
+    ArvoreB<int> arvoreB(t);
 
-    arvore.inserir(5);
-    arvore.inserir(3);
-    arvore.inserir(7);
-    arvore.inserir(1);
-    arvore.inserir(4);
+    // Teste de inserção
+    arvoreB.inserir(10);
+    arvoreB.inserir(20);
+    arvoreB.inserir(5);
+    arvoreB.inserir(30);
+
+    arvoreB.remover(10);
 
 
-    std::cout << "Excluindo o valor 3..." << std::endl;
-    arvore.excluir(3);
-
-    // Verificar se o valor 3 ainda está presente na árvore após a exclusão
-    NoB<int>* no3 = arvore.buscar(3);
-    if (no3 != nullptr) {
-        std::cout << "Teste falhou. O valor 3 ainda está presente na árvore." << std::endl;
+    if (arvoreB.buscar(10) != false) {
+        std::cout << "A exclusão falhou!" << std::endl;
         return -1;
     }
+
+    std::cout << "A exclusão foi bem-sucedida!" << std::endl;
+
 
     return 0;
 }

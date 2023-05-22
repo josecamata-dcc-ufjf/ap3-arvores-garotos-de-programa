@@ -350,7 +350,7 @@ public:
         return buscarRec(root, valor);
     }
 
-    void deleteArvoreAVL(){
+    void deleteArvoreRB(){
         limparArvore(root);
     }
     

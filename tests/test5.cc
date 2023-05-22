@@ -7,24 +7,27 @@ using namespace std;
 
 #include "b_tree.h"
 
-// Implemente aqui testes para busca de arvore B
+
 int main()
 {
-    ArvoreB<int> arvore;
+    int t = 3;  
+    ArvoreB<int> arvoreB(t);
 
-    arvore.inserir(5);
-    arvore.inserir(3);
-    arvore.inserir(7);
-    arvore.inserir(1);
-    arvore.inserir(4);
 
-    std::cout << "Raiz: " << arvore.getRaiz()->getInfo() << std::endl;
+    arvoreB.inserir(10);
+    arvoreB.inserir(20);
+    arvoreB.inserir(5);
+    arvoreB.inserir(30);
 
-    NoB<int>* no7 = arvore.buscar(7);
-    if (no7 != nullptr) {
-        std::cout << "Pai do 7: " << no7->getPai()->getInfo() << std::endl;
-        return 0;
+    bool busca = arvoreB.buscar(10);
+
+
+    if (busca == false) {
+        std::cout << "O teste falhou!" << std::endl;
+        return -1;
     }
 
-    return -1;
+    std::cout << "O teste foi bem-sucedido!" << std::endl;
+
+    return 0;
 }

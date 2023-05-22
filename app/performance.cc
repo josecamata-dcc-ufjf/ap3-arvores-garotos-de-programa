@@ -32,22 +32,31 @@ int NumRand(int TAM) {
 void constroiRB(int max){
     std::random_device rd;
     std::mt19937 rng(rd());
+    Perf::PerformanceTimer tempOrd;
+    Perf::PerformanceTimer tempAle;
 
     std::vector<int>randomVector(max);
     std::vector<int>ordenedVector(max);
 
     NoRB<int>* no_rb;
     RBTree<int> rb;
-    RBTree<int> rb2;    
+    RBTree<int> rb2;
 
     ordenedVector = gerarVetor(max);
     randomVector = ordenedVector;
     std::shuffle(randomVector.begin(), randomVector.end(), rng); // Embaralha os números 
 
+    tempOrd.start();
     for(int i = 0; i<max; i++){
         rb2.inserir(ordenedVector[i]); // ordenado
+    }
+    tempOrd.stop();
+
+    tempAle.start();
+    for(int i = 0; i<max; i++){
         rb.inserir(randomVector[i]); // aleatorio
     }
+    tempAle.stop();
 
     cout<<"Numero de comparacoes para " << max <<" valores                   : ";
     no_rb = rb.buscar(NumRand(max));
@@ -58,15 +67,23 @@ void constroiRB(int max){
 
     cout<<"Numero de rotações com inserção ordenada com " << max <<" valores : ";
     cout <<rb2.getRota()<< endl;
+    
+    cout <<"Tempo decorrido da inserção aleatoria"<<" com "<< max <<": " << tempAle.elapsed_time() << " segundos." << std::endl;
+    cout <<"Tempo decorrido da inserção ordenada"<<" com "<< max <<" : " << tempOrd.elapsed_time() << " segundos." << std::endl;
 
     if(max!=1000000){
         cout<<"------------------------------------------------------------------------------"<<endl;
     }
+
+    rb.deleteArvoreRB();
+    rb2.deleteArvoreRB();
 }
 
 void constroiAVL(int max){
     std::random_device rd;
     std::mt19937 rng(rd());
+    Perf::PerformanceTimer tempOrd;
+    Perf::PerformanceTimer tempAle;
 
     std::vector<int>randomVector(max);
     std::vector<int>ordenedVector(max);
@@ -79,11 +96,17 @@ void constroiAVL(int max){
     randomVector = ordenedVector;
     std::shuffle(randomVector.begin(), randomVector.end(), rng); // Embaralha os números 
 
-    
+     tempOrd.start();
     for(int i = 0; i<max; i++){
-        avl2.inserir(ordenedVector[i]); // insere
-        avl.inserir(randomVector[i]); // insere
+        avl2.inserir(ordenedVector[i]); // ordenado
     }
+    tempOrd.stop();
+
+    tempAle.start();
+    for(int i = 0; i<max; i++){
+        avl.inserir(randomVector[i]); // aleatorio
+    }
+    tempAle.stop();
 
     cout<<"Numero de comparacoes para " << max <<" valores                   : ";
     no_avl = avl.buscar(NumRand(max));
@@ -95,10 +118,56 @@ void constroiAVL(int max){
     cout<<"Numero de rotações com inserção ordenada com " << max <<" valores : ";
     cout <<avl2.getRota()<< endl;
 
+    cout <<"Tempo decorrido da inserção aleatoria"<<" com "<< max <<": " << tempAle.elapsed_time() << " segundos." << std::endl;
+    cout <<"Tempo decorrido da inserção ordenada"<<" com "<< max <<" : " << tempOrd.elapsed_time() << " segundos." << std::endl;
+    
     if(max!=1000000){
         cout<<"------------------------------------------------------------------------------"<<endl;
     }
+    avl.deleteArvoreAVL();
+    avl2.deleteArvoreAVL();
+}
 
+void constroiB(int max, int ordem){
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    
+    Perf::PerformanceTimer tempOrd;
+    Perf::PerformanceTimer tempAle;
+
+    std::vector<int>randomVector(max);
+    std::vector<int>ordenedVector(max);
+
+
+    ArvoreB<int> b(ordem);
+    ArvoreB<int> b2(ordem);
+
+    ordenedVector = gerarVetor(max);
+    randomVector = ordenedVector;
+    std::shuffle(randomVector.begin(), randomVector.end(), rng); // Embaralha os números 
+
+    tempOrd.start();
+    for(int i = 0; i<max; i++){
+        b.inserir(ordenedVector[i]); // insere
+    }
+    tempOrd.stop();
+
+    tempAle.start();
+    for(int i = 0; i<max; i++){
+        b2.inserir(randomVector[i]); // aleatorio
+    }
+    tempAle.stop();
+
+    cout<<"Numero de comparacoes para " << max <<" valores e ordem "<<ordem <<"       : ";
+    bool no_b = b.buscar(NumRand(max));
+    cout<<b.getComp()<<endl;
+
+    cout <<"Tempo decorrido da inserção aleatoria"<<" com "<< max <<" e ordem "<<ordem<<": " << tempAle.elapsed_time() << " segundos." << std::endl;
+    cout <<"Tempo decorrido da inserção ordenada"<<" com "<< max <<" e ordem "<<ordem<<" : " << tempOrd.elapsed_time() << " segundos." << std::endl;
+
+    if(max!=1000000 && ordem == 16){
+        cout<<"------------------------------------------------------------------------------"<<endl;
+    }
 
 }
 
@@ -113,7 +182,7 @@ int main(int argc, const char* argv[])
     //       - Para arvore B, teste para diferentes ordem: 2, 4, 8, 16;
     //       - Verifique o número de comparações na busca tanto na arvore AVL, vermelho-preto e na arvore B
     //      Indique os resultados obtidos no arquivo REPORT.md
-   
+  
     cout<<endl<<"=============================================================================="<<endl;
     cout<<"                           Arvore RED-BLACK:" << endl;
     
@@ -132,6 +201,19 @@ int main(int argc, const char* argv[])
     constroiAVL(10000);
     constroiAVL(100000);
     constroiAVL(1000000);
+
+    cout<<"=============================================================================="<<endl;
+
+   cout<<endl<<"=============================================================================="<<endl;
+    cout<<"                           Arvore B:" << endl;
+    
+   
+    constroiB(100, 2); constroiB(100, 4); constroiB(100, 8); constroiB(100, 16);
+    constroiB(1000, 2); constroiB(1000, 4); constroiB(1000, 8); constroiB(1000, 16);
+    constroiB(10000, 2); constroiB(10000, 4); constroiB(10000, 8); constroiB(10000, 16);
+    constroiB(100000, 2); constroiB(100000, 4); constroiB(100000, 8); constroiB(100000, 16);
+    constroiB(1000000, 2); constroiB(1000000, 4); constroiB(1000000, 8); constroiB(1000000, 16);
+
     cout<<"=============================================================================="<<endl;
 
     return 0;

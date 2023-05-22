@@ -23,6 +23,6 @@ int main() {
     }
 
 
-    arvore.deleteArvoreAVL();
+    arvore.deleteArvoreRB();
     return -1;
 }
