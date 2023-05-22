@@ -1,11 +1,10 @@
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cstring>
 using namespace std;
 
-#include <iostream>
+
 #include "avl_tree.h"
 
 int main() {
@@ -21,7 +20,7 @@ int main() {
     arvore.inserir(6);
 
     // Testar busca
-    No<int>* no = arvore.buscar(7);
+    NoAVL<int>* no = arvore.buscar(7);
     if (no != nullptr) {
         std::cout << "Elemento encontrado: " << no->getInfo() << std::endl;
     } else {

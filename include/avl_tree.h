@@ -3,188 +3,221 @@
 
 #include <iostream>
 
-template<typename T>
+#include "perf.h"
+#include "../src/perf.cc"
+
+template <typename T>
 class ArvoreAVL;
 
-template<typename T>
-class No {
+template <typename T>
+class NoAVL {
 private:
     T info;
-    No<T>* esquerda;
-    No<T>* direita;
-    No<T>* pai;
+    NoAVL<T>* pai;
+    NoAVL<T>* esq;
+    NoAVL<T>* dir;
+    int altura;
 
 public:
-    No(T valor) : info(valor), esquerda(nullptr), direita(nullptr), pai(nullptr) {}
+    NoAVL(T valor) : info(valor), pai(nullptr), esq(nullptr), dir(nullptr), altura(1) {}
 
-    T getInfo() const {
-        return info;
-    }
+    // Getters e Setters
+    NoAVL<T>* getPai() { return pai; }
+    NoAVL<T>* getEsq() { return esq; }
+    NoAVL<T>* getDir() { return dir; }
+    T getInfo() { return info; }
+    int getAltura() { return altura; }
 
-    No<T>* getEsquerda() const {
-        return esquerda;
-    }
-
-    No<T>* getDireita() const {
-        return direita;
-    }
-
-    No<T>* getPai() const {
-        return pai;
-    }
-
-    friend class ArvoreAVL<T>;
+    void setPai(NoAVL<T>* novoPai) { pai = novoPai; }
+    void setEsq(NoAVL<T>* novoEsq) { esq = novoEsq; }
+    void setDir(NoAVL<T>* novoDir) { dir = novoDir; }
+    void setInfo(T novaInfo) { info = novaInfo; }
+    void setAltura(int novaAltura) { altura = novaAltura; }
 };
 
-template<typename T>
+template <typename T>
 class ArvoreAVL {
 private:
-    No<T>* raiz;
+    NoAVL<T>* raiz;
 
-    // Métodos auxiliares
-    int altura(No<T>* no) const {
-        if (no == nullptr)
-            return -1;
-        return 1 + std::max(altura(no->getEsquerda()), altura(no->getDireita()));
-    }
-
-    int fatorBalanceamento(No<T>* no) const {
+    // Funções auxiliares
+    int altura(NoAVL<T>* no) {
         if (no == nullptr)
             return 0;
-        return altura(no->getEsquerda()) - altura(no->getDireita());
+        return no->getAltura();
     }
 
-    No<T>* rotacaoEsquerda(No<T>* no) {
-        No<T>* novaRaiz = no->getDireita();
-        no->direita = novaRaiz->getEsquerda();
-        if (novaRaiz->getEsquerda() != nullptr)
-            novaRaiz->getEsquerda()->pai = no;
-        novaRaiz->esquerda = no;
-        novaRaiz->pai = no->getPai();
-        no->pai = novaRaiz;
-        if (novaRaiz->getPai() != nullptr) {
-            if (novaRaiz->getPai()->getEsquerda() == no)
-                novaRaiz->getPai()->esquerda = novaRaiz;
-            else
-                novaRaiz->getPai()->direita = novaRaiz;
-        }
-        no = novaRaiz;
-        return no;
-    }
-
-    No<T>* rotacaoDireita(No<T>* no) {
-        No<T>* novaRaiz = no->getEsquerda();
-        no->esquerda = novaRaiz->getDireita();
-        if (novaRaiz->getDireita() != nullptr)
-            novaRaiz->getDireita()->pai = no;
-        novaRaiz->direita = no;
-        novaRaiz->pai = no->getPai();
-        no->pai = novaRaiz;
-        if (novaRaiz->getPai() != nullptr) {
-            if (novaRaiz->getPai()->getEsquerda() == no)
-                novaRaiz->getPai()->esquerda = novaRaiz;
-            else
-                novaRaiz->getPai()->direita = novaRaiz;
-        }
-        no = novaRaiz;
-        return no;
-    }
-
-    void balancearArvore(No<T>* no) {
-        while (no != nullptr) {
-            int fb = fatorBalanceamento(no);
-            if (fb > 1) {
-                if (fatorBalanceamento(no->getEsquerda()) < 0)
-                    no->esquerda = rotacaoEsquerda(no->getEsquerda());
-                no = rotacaoDireita(no);
-            } else if (fb < -1) {
-                if (fatorBalanceamento(no->getDireita()) > 0)
-                    no->direita = rotacaoDireita(no->getDireita());
-                no = rotacaoEsquerda(no);
-            }
-            no = no->getPai();
-        }
-    }
-
-    No<T>* inserirNo(No<T>* no, T valor) {
+    int fatorBalanceamento(NoAVL<T>* no) {
         if (no == nullptr)
-            return new No<T>(valor);
-        if (valor < no->getInfo()) {
-            No<T>* novoNo = inserirNo(no->getEsquerda(), valor);
-            no->esquerda = novoNo;
-            novoNo->pai = no;
-        } else if (valor > no->getInfo()) {
-            No<T>* novoNo = inserirNo(no->getDireita(), valor);
-            no->direita = novoNo;
-            novoNo->pai = no;
+            return 0;
+        return altura(no->getEsq()) - altura(no->getDir());
+    }
+
+    void atualizarAltura(NoAVL<T>* no) {
+        int alturaEsq = altura(no->getEsq());
+        int alturaDir = altura(no->getDir());
+        no->setAltura(1 + std::max(alturaEsq, alturaDir));
+    }
+
+    NoAVL<T>* rotacaoEsquerda(NoAVL<T>* no) {
+        perf.get_counter().increment_swaps();
+        NoAVL<T>* novoNo = no->getDir();
+        no->setDir(novoNo->getEsq());
+        if (novoNo->getEsq() != nullptr)
+            novoNo->getEsq()->setPai(no);
+        novoNo->setPai(no->getPai());
+        if (no->getPai() == nullptr)
+            raiz = novoNo;
+        else if (no == no->getPai()->getEsq())
+            no->getPai()->setEsq(novoNo);
+        else
+            no->getPai()->setDir(novoNo);
+        novoNo->setEsq(no);
+        no->setPai(novoNo);
+        atualizarAltura(no);
+        atualizarAltura(novoNo);
+        return novoNo;
+    }
+
+    NoAVL<T>* rotacaoDireita(NoAVL<T>* no) {
+        perf.get_counter().increment_swaps();
+        NoAVL<T>* novoNo = no->getEsq();
+        no->setEsq(novoNo->getDir());
+        if (novoNo->getDir() != nullptr)
+            novoNo->getDir()->setPai(no);
+        novoNo->setPai(no->getPai());
+        if (no->getPai() == nullptr)
+            raiz = novoNo;
+        else if (no == no->getPai()->getDir())
+            no->getPai()->setDir(novoNo);
+        else
+            no->getPai()->setEsq(novoNo);
+        novoNo->setDir(no);
+        no->setPai(novoNo);
+        atualizarAltura(no);
+        atualizarAltura(novoNo);
+        return novoNo;
+    }
+
+    NoAVL<T>* balancear(NoAVL<T>* no) {
+        atualizarAltura(no);
+        int fb = fatorBalanceamento(no);
+        if (fb > 1) {
+            if (fatorBalanceamento(no->getEsq()) < 0)
+                no->setEsq(rotacaoEsquerda(no->getEsq()));
+            return rotacaoDireita(no);
         }
-        balancearArvore(no);
+        if (fb < -1) {
+            if (fatorBalanceamento(no->getDir()) > 0)
+                no->setDir(rotacaoDireita(no->getDir()));
+            return rotacaoEsquerda(no);
+        }
         return no;
     }
 
-    No<T>* buscarNo(No<T>* no, T valor) const {
+    NoAVL<T>* inserirRecursivo(NoAVL<T>* no, const T& valor) {
+        if (no == nullptr)
+            return new NoAVL<T>(valor);
+
+        if (valor < no->getInfo()) {
+            NoAVL<T>* novoEsq = inserirRecursivo(no->getEsq(), valor);
+            no->setEsq(novoEsq);
+            novoEsq->setPai(no);
+        } else {
+            NoAVL<T>* novoDir = inserirRecursivo(no->getDir(), valor);
+            no->setDir(novoDir);
+            novoDir->setPai(no);
+        }
+
+        return balancear(no);
+    }
+
+    NoAVL<T>* removerRecursivo(NoAVL<T>* no, const T& valor) {
+        if (no == nullptr)
+            return no;
+
+        if (valor < no->getInfo()) {
+            NoAVL<T>* novoEsq = removerRecursivo(no->getEsq(), valor);
+            no->setEsq(novoEsq);
+            if (novoEsq != nullptr)
+                novoEsq->setPai(no);
+        } else if (valor > no->getInfo()) {
+            NoAVL<T>* novoDir = removerRecursivo(no->getDir(), valor);
+            no->setDir(novoDir);
+            if (novoDir != nullptr)
+                novoDir->setPai(no);
+        } else {
+            if (no->getEsq() == nullptr && no->getDir() == nullptr) {
+                delete no;
+                return nullptr;
+            } else if (no->getEsq() == nullptr) {
+                NoAVL<T>* filhoDir = no->getDir();
+                filhoDir->setPai(no->getPai());
+                delete no;
+                return filhoDir;
+            } else if (no->getDir() == nullptr) {
+                NoAVL<T>* filhoEsq = no->getEsq();
+                filhoEsq->setPai(no->getPai());
+                delete no;
+                return filhoEsq;
+            } else {
+                NoAVL<T>* sucessor = encontrarMinimo(no->getDir());
+                no->setInfo(sucessor->getInfo());
+                NoAVL<T>* novoDir = removerRecursivo(no->getDir(), sucessor->getInfo());
+                no->setDir(novoDir);
+                if (novoDir != nullptr)
+                    novoDir->setPai(no);
+            }
+        }
+
+        return balancear(no);
+    }
+
+    NoAVL<T>* encontrarMinimo(NoAVL<T>* no) {
+        if (no->getEsq() == nullptr)
+            return no;
+        return encontrarMinimo(no->getEsq());
+    }
+
+    NoAVL<T>* buscarRecursivo(NoAVL<T>* no, const T& valor) {
+        perf.get_counter().increment_comparisons();
         if (no == nullptr || no->getInfo() == valor)
             return no;
+
+        perf.get_counter().increment_comparisons();
         if (valor < no->getInfo())
-            return buscarNo(no->getEsquerda(), valor);
-        return buscarNo(no->getDireita(), valor);
-    }
+            return buscarRecursivo(no->getEsq(), valor);
 
-    No<T>* encontrarNoMinimo(No<T>* no) const {
-        if (no == nullptr)
-            return nullptr;
-        while (no->getEsquerda() != nullptr)
-            no = no->getEsquerda();
-        return no;
-    }
-
-    No<T>* removerNo(No<T>* no, T valor) {
-        if (no == nullptr)
-            return no;
-        if (valor < no->getInfo()) {
-            no->esquerda = removerNo(no->getEsquerda(), valor);
-        } else if (valor > no->getInfo()) {
-            no->direita = removerNo(no->getDireita(), valor);
-        } else {
-            if (no->getEsquerda() == nullptr) {
-                No<T>* temp = no->getDireita();
-                if (temp != nullptr)
-                    temp->pai = no->getPai();
-                delete no;
-                return temp;
-            } else if (no->getDireita() == nullptr) {
-                No<T>* temp = no->getEsquerda();
-                if (temp != nullptr)
-                    temp->pai = no->getPai();
-                delete no;
-                return temp;
-            }
-            No<T>* temp = encontrarNoMinimo(no->getDireita());
-            no->info = temp->getInfo();
-            no->direita = removerNo(no->getDireita(), temp->getInfo());
-        }
-        balancearArvore(no);
-        return no;
+        return buscarRecursivo(no->getDir(), valor);
     }
 
 public:
+
+    Perf::Performance perf;
+
+    unsigned int getComp(){
+        return perf.get_counter().get_comparisons();
+    }
+
+    unsigned int getRota(){
+        return perf.get_counter().get_swaps();
+    }
+
     ArvoreAVL() : raiz(nullptr) {}
 
-    No<T>* getRaiz() const {
-        return raiz;
+    void inserir(const T& valor) {
+        raiz = inserirRecursivo(raiz, valor);
     }
 
-    void inserir(T valor) {
-        raiz = inserirNo(raiz, valor);
+    void remover(const T& valor) {
+        raiz = removerRecursivo(raiz, valor);
     }
 
-    No<T>* buscar(T valor) const {
-        return buscarNo(raiz, valor);
-    }
-
-    void remover(T valor) {
-        raiz = removerNo(raiz, valor);
+    NoAVL<T>* buscar(const T& valor) {
+        return buscarRecursivo(raiz, valor);
     }
 };
+
+
 
 #endif

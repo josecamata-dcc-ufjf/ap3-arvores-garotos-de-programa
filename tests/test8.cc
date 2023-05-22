@@ -21,7 +21,7 @@ int main() {
     arvore.inserir(6);
 
     // Testar busca
-    No<int>* no = arvore.buscar(4);
+    NoAVL<int>* no = arvore.buscar(4);
     if (no != nullptr) {
         std::cout << "Elemento encontrado: " << no->getInfo() << std::endl;
     } else {
