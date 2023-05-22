@@ -5,34 +5,36 @@
 
 #include <iostream>
 
+#include "perf.h"
+
 template <typename T>
 class RBTree;
 
 template <typename T>
-class No {
+class NoRB {
 private:
     T info;
-    No<T>* esq;
-    No<T>* dir;
-    No<T>* pai;
+    NoRB<T>* esq;
+    NoRB<T>* dir;
+    NoRB<T>* pai;
     bool cor; // 1 para vermelho, 0 para preto
 
 public:
-    No(const T& valor) : info(valor), esq(nullptr), dir(nullptr), pai(nullptr), cor(1) {}
+    NoRB(const T& valor) : info(valor), esq(nullptr), dir(nullptr), pai(nullptr), cor(1) {}
 
     T getInfo() const {
         return info;
     }
 
-    No<T>* getEsq() const {
+    NoRB<T>* getEsq() const {
         return esq;
     }
 
-    No<T>* getDir() const {
+    NoRB<T>* getDir() const {
         return dir;
     }
 
-    No<T>* getPai() const {
+    NoRB<T>* getPai() const {
         return pai;
     }
 
@@ -46,10 +48,10 @@ public:
 template <typename T>
 class RBTree {
 private:
-    No<T>* root;
+    NoRB<T>* root;
 
-    void rotacaoEsq(No<T>* x) {
-        No<T>* y = x->dir;
+    void rotacaoEsq(NoRB<T>* x) {
+        NoRB<T>* y = x->dir;
         x->dir = y->esq;
 
         if (y->esq != nullptr)
@@ -68,8 +70,8 @@ private:
         x->pai = y;
     }
 
-    void rotacaoDir(No<T>* x) {
-        No<T>* y = x->esq;
+    void rotacaoDir(NoRB<T>* x) {
+        NoRB<T>* y = x->esq;
         x->esq = y->dir;
 
         if (y->dir != nullptr)
@@ -88,16 +90,16 @@ private:
         x->pai = y;
     }
 
-    void fixViolacao(No<T>*& pt) {
-        No<T>* pai_pt = nullptr;
-        No<T>* avo_pt = nullptr;
+    void fixViolacao(NoRB<T>*& pt) {
+        NoRB<T>* pai_pt = nullptr;
+        NoRB<T>* avo_pt = nullptr;
 
         while ((pt != root) && (pt->cor != 0) && (pt->pai->cor == 1)) {
             pai_pt = pt->pai;
             avo_pt = pt->pai->pai;
 
             if (pai_pt == avo_pt->esq) {
-                No<T>* tio_pt = avo_pt->dir;
+                NoRB<T>* tio_pt = avo_pt->dir;
 
                 if (tio_pt != nullptr && tio_pt->cor == 1) {
                     avo_pt->cor = 1;
@@ -116,7 +118,7 @@ private:
                     pt = pai_pt;
                 }
             } else {
-                No<T>* tio_pt = avo_pt->esq;
+                NoRB<T>* tio_pt = avo_pt->esq;
 
                 if (tio_pt != nullptr && tio_pt->cor == 1) {
                     avo_pt->cor = 1;
@@ -140,7 +142,7 @@ private:
         root->cor = 0;
     }
 
-    void removerNo(No<T>*& pt, const T& valor) {
+    void removerNo(NoRB<T>*& pt, const T& valor) {
         if (pt == nullptr)
             return;
 
@@ -150,7 +152,7 @@ private:
             removerNo(pt->dir, valor);
         } else {
             if (pt->esq == nullptr || pt->dir == nullptr) {
-                No<T>* temp = pt->esq ? pt->esq : pt->dir;
+                NoRB<T>* temp = pt->esq ? pt->esq : pt->dir;
 
                 if (temp == nullptr) {
                     temp = pt;
@@ -161,7 +163,7 @@ private:
 
                 delete temp;
             } else {
-                No<T>* temp = minimo(pt->dir);
+                NoRB<T>* temp = minimo(pt->dir);
                 pt->info = temp->info;
                 removerNo(pt->dir, temp->info);
             }
@@ -172,11 +174,11 @@ private:
 
         if (pt->esq == nullptr || pt->dir == nullptr) {
             if (pt->esq == nullptr) {
-                No<T>* filho = pt->dir;
+                NoRB<T>* filho = pt->dir;
                 substituir(pt, pt->dir);
                 deleteFixUp(filho);
             } else {
-                No<T>* filho = pt->esq;
+                NoRB<T>* filho = pt->esq;
                 substituir(pt, pt->esq);
                 deleteFixUp(filho);
             }
@@ -184,20 +186,20 @@ private:
             delete pt;
             pt = nullptr;
         } else {
-            No<T>* sucessor = minimo(pt->dir);
+            NoRB<T>* sucessor = minimo(pt->dir);
             pt->info = sucessor->info;
             removerNo(pt->dir, sucessor->info);
         }
     }
 
-    No<T>* minimo(No<T>* pt) {
+    NoRB<T>* minimo(NoRB<T>* pt) {
         while (pt->esq != nullptr)
             pt = pt->esq;
 
         return pt;
     }
 
-    void substituir(No<T>* antigo, No<T>* novo) {
+    void substituir(NoRB<T>* antigo, NoRB<T>* novo) {
         if (antigo->pai == nullptr)
             root = novo;
         else if (antigo == antigo->pai->esq)
@@ -209,13 +211,13 @@ private:
             novo->pai = antigo->pai;
     }
 
-    void deleteFixUp(No<T>* pt) {
+    void deleteFixUp(NoRB<T>* pt) {
         if (pt == nullptr)
             return;
 
         while (pt != root && pt->cor == 0) {
             if (pt == pt->pai->esq) {
-                No<T>* irmao = pt->pai->dir;
+                NoRB<T>* irmao = pt->pai->dir;
 
                 if (irmao->cor == 1) {
                     irmao->cor = 0;
@@ -242,7 +244,7 @@ private:
                     pt = root;
                 }
             } else {
-                No<T>* irmao = pt->pai->esq;
+                NoRB<T>* irmao = pt->pai->esq;
 
                 if (irmao->cor == 1) {
                     irmao->cor = 0;
@@ -274,31 +276,7 @@ private:
         pt->cor = 0;
     }
 
-public:
-    RBTree() : root(nullptr) {}
-
-    No<T>* getRoot() const {
-        return root;
-    }
-
-    void inserir(const T& valor) {
-        No<T>* pt = new No<T>(valor);
-
-        root = inserirRec(root, pt);
-
-        fixViolacao(pt);
-    }
-
-    void remover(const T& valor) {
-        removerNo(root, valor);
-    }
-
-    No<T>* buscar(const T& valor) {
-        return buscarRec(root, valor);
-    }
-
-private:
-    No<T>* inserirRec(No<T>* raiz, No<T>* pt) {
+    NoRB<T>* inserirRec(NoRB<T>* raiz, NoRB<T>* pt) {
         if (raiz == nullptr)
             return pt;
 
@@ -313,15 +291,52 @@ private:
         return raiz;
     }
 
-    No<T>* buscarRec(No<T>* raiz, const T& valor) {
-        if (raiz == nullptr || raiz->info == valor)
+    NoRB<T>* buscarRec(NoRB<T>* raiz, const T& valor) {
+        perf.get_counter().increment_comparisons();
+        if (raiz == nullptr || raiz->info == valor){
+            
             return raiz;
-
-        if (valor < raiz->info)
+        }
+       
+        perf.get_counter().increment_comparisons();
+        if (valor < raiz->info){
+            
             return buscarRec(raiz->esq, valor);
-
+        }
         return buscarRec(raiz->dir, valor);
     }
+
+public:
+
+    Perf::Performance perf;
+
+    unsigned int getPer(){
+        return perf.get_counter().get_comparisons();
+    }
+
+
+    RBTree() : root(nullptr) {}
+
+    NoRB<T>* getRoot() const {
+        return root;
+    }
+
+    void inserir(const T& valor) {
+        NoRB<T>* pt = new NoRB<T>(valor);
+
+        root = inserirRec(root, pt);
+
+        fixViolacao(pt);
+    }
+
+    void remover(const T& valor) {
+        removerNo(root, valor);
+    }
+
+    NoRB<T>* buscar(const T& valor) {
+        return buscarRec(root, valor);
+    }
+    
 };
 
 #endif /* RB_TREE_H */

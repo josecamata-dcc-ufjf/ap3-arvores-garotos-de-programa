@@ -16,7 +16,7 @@ int main() {
     arvore.inserir(50);
 
     // Teste de busca
-    No<int>* resultado = arvore.buscar(30);
+    NoRB<int>* resultado = arvore.buscar(30);
     if (resultado != nullptr){
         std::cout << "Valor encontrado: " << resultado->getInfo() << std::endl;
         return 0;

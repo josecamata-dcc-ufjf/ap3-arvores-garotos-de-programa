@@ -23,13 +23,13 @@ RBTree<int> arvore;
     arvore.remover(3);
 
     // Verificar se o valor 3 ainda está presente na árvore após a exclusão
-    No<int>* no3 = arvore.buscar(3);
+    NoRB<int>* no3 = arvore.buscar(3);
     if (no3 != nullptr) {
         std::cout << "Teste falhou. O valor 3 ainda está presente na árvore." << std::endl;
         return -1;
     }
 
-     No<int>* resultado = arvore.buscar(3);
+     NoRB<int>* resultado = arvore.buscar(3);
     if (resultado != nullptr){
         std::cout << "Valor encontrado: " << resultado->getInfo() << std::endl;
         return -1;
