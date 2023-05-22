@@ -51,6 +51,7 @@ private:
     NoRB<T>* root;
 
     void rotacaoEsq(NoRB<T>* x) {
+        perf.get_counter().increment_swaps();
         NoRB<T>* y = x->dir;
         x->dir = y->esq;
 
@@ -71,6 +72,7 @@ private:
     }
 
     void rotacaoDir(NoRB<T>* x) {
+        perf.get_counter().increment_swaps();
         NoRB<T>* y = x->esq;
         x->esq = y->dir;
 
@@ -310,8 +312,12 @@ public:
 
     Perf::Performance perf;
 
-    unsigned int getPer(){
+    unsigned int getComp(){
         return perf.get_counter().get_comparisons();
+    }
+
+    unsigned int getRota(){
+        return perf.get_counter().get_swaps();
     }
 
 

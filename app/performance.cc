@@ -38,18 +38,30 @@ void constroiRB(int max){
 
     NoRB<int>* no_rb;
     RBTree<int> rb;
+    RBTree<int> rb2;
 
     ordenedVector = gerarVetor(max);
     randomVector = ordenedVector;
     std::shuffle(randomVector.begin(), randomVector.end(), rng); // Embaralha os números 
 
     for(int i = 0; i<max; i++){
+        rb2.inserir(ordenedVector[i]); // insere
         rb.inserir(randomVector[i]); // insere
     }
 
+    cout<<"Numero de comparacoes para " << max <<" valores                   : ";
     no_rb = rb.buscar(NumRand(max));
-    cout <<rb.getPer()<< endl;
+    cout <<rb.getComp()<< endl;
 
+    cout<<"Numero de rotações com inserção aleatoria com " << max <<" valores: ";
+    cout <<rb.getRota()<< endl;
+
+    cout<<"Numero de rotações com inserção ordenada com " << max <<" valores : ";
+    cout <<rb2.getRota()<< endl;
+
+    if(max!=1000000){
+        cout<<"------------------------------------------------------------------------------"<<endl;
+    }
 }
 
 
@@ -65,21 +77,16 @@ int main(int argc, const char* argv[])
     //       - Verifique o número de comparações na busca tanto na arvore AVL, vermelho-preto e na arvore B
     //      Indique os resultados obtidos no arquivo REPORT.md
    
-cout<<endl<<"------------------------------------------------------------------------------"<<endl;
+cout<<endl<<"=============================================================================="<<endl;
     cout<<"                           Arvore RED-BLACK:" << endl;
-
-    cout<<"Numero de comparacoes para cem valores         : ";
+    
     constroiRB(100);
-    cout<<"Numero de comparacoes para mil valores         : ";
     constroiRB(1000);
-    cout<<"Numero de comparacoes para dez mil valores     : ";
     constroiRB(1000);
-    cout<<"Numero de comparacoes para cem mil valores     : ";
     constroiRB(100000);
-    cout<<"Numero de comparacoes para um milhao de valores: ";
     constroiRB(1000000);
 
-    cout<<"------------------------------------------------------------------------------"<<endl;
+    cout<<"=============================================================================="<<endl;
     
     return 0;
 
