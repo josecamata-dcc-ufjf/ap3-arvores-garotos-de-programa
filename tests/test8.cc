@@ -29,5 +29,7 @@ int main() {
         return -1;
     }
 
+    arvore.deleteArvoreAVL();
+    
     return 0;
 }

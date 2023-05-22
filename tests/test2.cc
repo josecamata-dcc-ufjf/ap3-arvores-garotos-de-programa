@@ -24,5 +24,6 @@ int main() {
         return 0;
     }
 
+    arvore.deleteArvoreAVL();
     return -1;
 }

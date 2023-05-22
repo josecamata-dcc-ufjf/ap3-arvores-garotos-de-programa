@@ -308,6 +308,13 @@ private:
         return buscarRec(raiz->dir, valor);
     }
 
+    void limparArvore(NoRB<T>* no) {
+    if (no != nullptr) {
+        limparArvore(no->esq);
+        limparArvore(no->dir);
+        delete no;
+    }
+}
 public:
 
     Perf::Performance perf;
@@ -341,6 +348,10 @@ public:
 
     NoRB<T>* buscar(const T& valor) {
         return buscarRec(root, valor);
+    }
+
+    void deleteArvoreAVL(){
+        limparArvore(root);
     }
     
 };

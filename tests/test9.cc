@@ -39,5 +39,6 @@ int main() {
         std::cout << "Elemento não encontrado!" << std::endl;
     }
 
+    arvore.deleteArvoreAVL();
     return 0;
 }

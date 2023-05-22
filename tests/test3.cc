@@ -35,5 +35,6 @@ RBTree<int> arvore;
         return -1;
     }
 
+    arvore.deleteArvoreAVL();
     return 0;
 }

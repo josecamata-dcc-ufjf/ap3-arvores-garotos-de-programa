@@ -33,6 +33,8 @@ public:
     void setDir(NoAVL<T>* novoDir) { dir = novoDir; }
     void setInfo(T novaInfo) { info = novaInfo; }
     void setAltura(int novaAltura) { altura = novaAltura; }
+
+    friend class ArvoreAVL<T>;
 };
 
 template <typename T>
@@ -191,6 +193,13 @@ private:
         return buscarRecursivo(no->getDir(), valor);
     }
 
+    void limparArvore(NoAVL<T>* no) {
+    if (no != nullptr) {
+        limparArvore(no->esq);
+        limparArvore(no->dir);
+        delete no;
+    }
+}
 public:
 
     Perf::Performance perf;
@@ -216,6 +225,13 @@ public:
     NoAVL<T>* buscar(const T& valor) {
         return buscarRecursivo(raiz, valor);
     }
+
+
+    
+    void deleteArvoreAVL(){
+        limparArvore(raiz);
+    }
+
 };
 
 
