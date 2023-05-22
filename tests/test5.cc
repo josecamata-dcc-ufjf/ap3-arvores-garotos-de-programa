@@ -20,7 +20,7 @@ int main()
 
     std::cout << "Raiz: " << arvore.getRaiz()->getInfo() << std::endl;
 
-    No<int>* no7 = arvore.buscar(7);
+    NoB<int>* no7 = arvore.buscar(7);
     if (no7 != nullptr) {
         std::cout << "Pai do 7: " << no7->getPai()->getInfo() << std::endl;
         return 0;
