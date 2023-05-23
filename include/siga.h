@@ -5,13 +5,31 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cstring>
 using namespace std;
 
 #include "config.h"
 #include "estudante.h"
+#include "rb_tree.h"
+
 
 namespace Siga
 {
+
+
+    struct Indexador{
+
+    int matricula;
+    int idx;
+
+    bool operator==(const Indexador &b) const { return matricula == b.matricula; }
+    bool operator>(const Indexador &b) const { return matricula > b.matricula; }
+    bool operator<(const Indexador &b) const { return matricula < b.matricula; }
+    bool operator<=(const Indexador &b) const { return matricula <= b.matricula; }
+    bool operator>=(const Indexador &b) const { return matricula >= b.matricula; }
+
+    };
+
 
 class Siga
 {
@@ -34,6 +52,8 @@ class Siga
         string   arquivo_nome;
         fstream  file_stream;
         int      n_estudantes;
+
+        RBTree<Indexador> rbTree;
 
         // funções auxiliares
         void      LeiaEstudante(int idx, Estudante &est);

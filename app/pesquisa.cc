@@ -8,8 +8,8 @@ void print_menu()
     cout << "SIGA - Sistema de Gestão Acadêmica" << endl;
     cout << "-----------------------------------" << endl;
     cout << "1. Inserir estudante" << endl;
-    cout << "2. Buscar estudante Por Nome" << endl;
-    cout << "3. Buscar estudante Por Matricula" << endl;
+    cout << "2. Buscar estudante Por Matricula" << endl;
+    cout << "3. Buscar estudante Por Nome" << endl;
     cout << "4. Exportar CSV" << endl;
     cout << "9. Sair" << endl;
     cout << "Digite sua opção: ";

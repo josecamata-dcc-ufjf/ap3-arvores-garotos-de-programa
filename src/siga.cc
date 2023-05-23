@@ -121,9 +121,19 @@ namespace Siga
             Estudante est;
             stringstream ss(line);
             string token;
+
+            Indexador idx;
+
+
             getline(ss, token, ','); // le matricula
+
+            idx.matricula = stoi(token);
+            idx.idx = n_estudantes;
+
             est.TrocarMatricula(stoi(token));
             getline(ss, token, ','); // le nome
+
+
             est.TrocarNome(token.c_str());
             getline(ss, token, ','); // ano_ingresso
             est.TrocarAnoIngresso(stoi(token));
@@ -133,6 +143,9 @@ namespace Siga
             est.TrocarCurso(stoi(token));
             getline(ss, token); // ira
             est.TrocarIRA(stof(token));
+
+            rbTree.inserir(idx);
+
 
             this->EscrevaEstudante(this->n_estudantes, est);
             this->n_estudantes++;
@@ -147,7 +160,23 @@ namespace Siga
     {
     
         //TODO: modificar para usar a indexação por matricula
-        file_stream.seekg(0, file_stream.beg);
+
+        Indexador aux;
+
+        aux.matricula = matricula;
+
+        NoRB<Indexador> * noAux = rbTree.buscar(aux);
+
+        if(noAux != nullptr){
+
+            aux = noAux->getInfo();
+
+            return aux.idx;
+
+        }
+
+
+        /*file_stream.seekg(0, file_stream.beg);
         for (int i = 0; i < n_estudantes; i++)
         {
             Estudante est = ObterEstudante(i);
@@ -156,7 +185,8 @@ namespace Siga
                 return i;
             }
         }
-    
+        */
+
         return -1;
     }
 
@@ -164,7 +194,24 @@ namespace Siga
     {
     
         //TODO: modificar para usar a indexação por nome
-        file_stream.seekg(0, file_stream.beg);
+        
+        /*IndexadorName auxn;
+
+        auxn.nome = nome;
+
+        NoRB<IndexadorName> * noAux = rbTreeName.buscar(auxn);
+
+        if(noAux != nullptr){
+
+            auxn = noAux->getInfo();
+
+            return auxn.idx;
+
+        }*/
+
+        cout<<"Não implementado";
+
+        /*file_stream.seekg(0, file_stream.beg);
         for (int i = 0; i < n_estudantes; i++)
         {
             Estudante est = ObterEstudante(i);
@@ -172,7 +219,7 @@ namespace Siga
             {
                 return i;
             }
-        }
+        }*/
     
         return -1;
     }
@@ -185,6 +232,13 @@ namespace Siga
             cout << "Estudante já existe" << endl;
             return;
         }
+
+        Indexador aux;
+        aux.matricula = est.ObterMatricula();
+        aux.idx = n_estudantes;
+
+        rbTree.inserir(aux);
+
         this->EscrevaEstudante(this->n_estudantes, est);
         this->n_estudantes++;
     }
