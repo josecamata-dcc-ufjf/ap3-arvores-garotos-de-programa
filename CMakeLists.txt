@@ -25,6 +25,9 @@ add_test(NAME test3 COMMAND test3)
 add_test(NAME test4 COMMAND test4)
 add_test(NAME test5 COMMAND test5)
 add_test(NAME test6 COMMAND test6)
+add_test(NAME test7 COMMAND test7)
+add_test(NAME test8 COMMAND test8)
+add_test(NAME test9 COMMAND test9)
 
 # Build the main executable
 add_executable(performance app/performance.cc)

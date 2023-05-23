@@ -4,7 +4,7 @@
 // o diretório onde os arquivos de entrada estão localizados.
 // Não deve ser modificado manualmente.
 
-#define INPUT_DATA_DIR "/home/camata/git/dcc/dcc012/dcc012-trab-trees/tests/data/"
+#define INPUT_DATA_DIR "/workspaces/ap3-arvores-garotos-de-programa/tests/data/"
 
 #define TEST_VECTOR_SIZE 100
 
